@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1> Join Now</h1>
+    <form id="signup" method='POST' action=''>{% csrf_token%}
+        {{form.as_p}}
+         <input type='submit' class='btn btn-success btn-lg'/>
+    </form>
+
+    {% endblock %}
+
+
+</html>
