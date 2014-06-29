@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+
+{% block content %}
+                   
+                      
+                 {% for course in course_instance_list %}
+                         
+                         <div class="col-md-4">
+                            <div class="container">
+                              <a href="{% url 'course_detail' course.id %}">  <h2   align="center">{{ course.course_name }}</h2>  </a> 
+                                
+                                <p  align="center">{{ course.course_desc|slice:":150" }}</p>
+                                
+                         </div>
+                        </div>
+                            {% endfor %}
+                          
+                           
+                 {% endblock %}
+</html>

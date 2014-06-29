@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+{% extends 'basedetail.html' %}
+
+{% block content %}
+                    
+                      <h1   align="center" >{{ session.session_name }}</h1>  </a> 
+                           
+                           
+                           <div class="input-group input-group-lg">
+                              <form action="{% url 'save_notes'  %}" class="input-group input-group-lg" method="post"> {% csrf_token %}
+                                  <input type="hidden"  name="session.id"  value="{{ session.id }}" />
+                                  <!--<input type="hidden"  name="session.id"  value="${sessionInstance?.id}" />
+                                  <input type="hidden"  name="user.id"  value="1" />-->
+      
+                              <input type="text" name="text" class="form-control">
+                              <span class="input-group-addon"><button class="btn-group btn-success" type="submit" name="create" value="Create">post</button></span>
+                              </input>
+                              </form>
+                        </div>
+                           
+                         <div class="row marketing" >
+                               
+                        
+                               <div class="list-group"> 
+                               
+                                   {% for notes in sessions_notes_list %}
+                               <div class="list-group-item">
+                              
+                                   <div class="col-md-6 col-md-offset-3">
+                                    <p   align="center">{{ notes.notes }}</p>  
+                                
+                               
+                                
+                                
+                               </div>
+                              
+                            {% endfor %}
+                                   
+                               </div>
+                              </div>
+                         </div>
+                              
+                          
+                           
+                 {% endblock %}
+                 
+               
+</html>
