@@ -58,9 +58,9 @@ div .right{
   float:right;  
 }
 
-div .left{
-  width:30%;
-  float:left ; 
+div .center{
+  width:60%;
+  float:right ; 
 }</style>
 <link rel="stylesheet" type="text/css" href="static/templates/styles.css">
 </head>
@@ -68,7 +68,7 @@ div .left{
     <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
     <script src="action.js"></script>
 <div class="container">
-  <div id="sync" class="right">
+  <div id="sync" class="center">
 <form action="{% url 'handlelogin'  %}" method="post" name="login_form" id="login_form"> {% csrf_token %}
 <input id="new_user" class="new_user" type="button" value="I am a new user" lang="en-US" style="top: 13px;">
   <span> Or </span><br/>
