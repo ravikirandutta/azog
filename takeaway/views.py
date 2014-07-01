@@ -56,11 +56,15 @@ def handlelogin(request):
     
     if mode == "Register" :
         if User.objects.filter(username=username).count():
+            user = authenticate(username=username, password=request.POST.get('Password'))
+            
             return HttpResponse( "User : " + username + " already exists")
         else :
             User.objects.create_user(username, username,  request.POST.get('Password'))
             newuser = authenticate(username=username, password=request.POST.get('Password'))
             login(request,newuser)
+            Course.objects.get(course_name="STRATEGY").students.add(newuser)
+            Course.objects.get(course_name="FINANCE").students.add(newuser)
             course_instance_list = Course.objects.filter(students=newuser)
             return render_to_response("course_list.html",{'course_instance_list':course_instance_list,'logged_user':newuser},RequestContext(request))
         
