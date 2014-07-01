@@ -21,7 +21,7 @@ class Course(models.Model):
      # Maybe try file field and Image field here to associate a pdf/rtf/txt file for each course and maybe an image for each course
      # models.FileField(upload_to='documents/%Y/%m/%d')
      
-     def __unicode__(self):
+     def  __unicode__(self):
         return smart_unicode(self.course_name)
     
      def get_enrolled_students(self):

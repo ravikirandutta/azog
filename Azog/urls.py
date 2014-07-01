@@ -20,6 +20,7 @@ urlpatterns = patterns('',
     url(r'^takeaway/*/$', 'takeaway.views.coursedetail', name='course_detail'),
     url(r'^takeaway/course/(?P<course_id>[0-9]+)/$', 'takeaway.views.coursedetail', name='course_detail'),
     url(r'^takeaway/session/(?P<session_id>[0-9]+)/$', 'takeaway.views.sessiondetail', name='session_detail'),
+    url(r'^takeaway/session/(?P<session_id>[0-9]+)all/$', 'takeaway.views.sessiondetailall', name='session_detailall'),
     url(r'^takeaway/notes/save/', 'takeaway.views.savenotes', name='save_notes'),
     url(r'^takeaway/initload', 'takeaway.views.initload', name='initload'),
 )

@@ -113,6 +113,12 @@ def sessiondetail(request,session_id=1):
     sessions_notes_list = TakeAway.objects.filter(session=session_obj).filter(user=request.user)
     return render_to_response("takeawaydetail.html",{'course':course_obj,'session':session_obj,'sessions_notes_list':sessions_notes_list},RequestContext(request))
 
+def sessiondetailall(request,session_id=1):
+    session_obj = Session.objects.get(pk=session_id)
+    course_obj = session_obj.course
+    sessions_notes_list = TakeAway.objects.filter(session=session_obj)
+    return render_to_response("takeawaydetail.html",{'course':course_obj,'session':session_obj,'sessions_notes_list':sessions_notes_list},RequestContext(request))
+
 def savenotes(request):
     takeaway = request.POST.get('text')
     session_id = request.POST.get('session.id')
