@@ -1,2 +1,2 @@
-#web: gunicorn Azog.wsgi
-web: python manage.py runserver
+web: gunicorn Azog.wsgi:application
+#web: python manage.py runserver
