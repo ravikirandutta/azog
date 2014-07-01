@@ -143,7 +143,7 @@ def initload(request):
     course1 = Course.objects.get(course_name="STRATEGY")
     course2 = Course.objects.get(course_name="FINANCE")
     course3 = Course.objects.get(course_name="MARKETING")
-    course1.add(students=[user1,user2])
+   # course1.add(students=user1,user2])
     Session(course=course1,session_name="Week 1 : Introduction to Strategic Planning",session_dt="2014-06-23").save()
     Session(course=course1,session_name="Week 2 : Dynamics of Strategic Planning",session_dt="2014-06-23").save()
     Session(course=course1,session_name="Week 3 : Mastering Strategic Planning",session_dt="2014-06-23").save()
