@@ -56,15 +56,23 @@ WSGI_APPLICATION = 'Azog.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
-DATABASES = {
-    'default': {
+
+import os
+is_local = os.environ['local']
+
+if is_local:
+	DATABASES = {
+    	'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
+    	}
+	}
+else:
+	import dj_database_url
+	DATABASES['default'] =  dj_database_url.config()
 
-import dj_database_url
-DATABASES['default'] =  dj_database_url.config()
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
