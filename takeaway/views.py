@@ -26,7 +26,7 @@ def personal_index(request):
 
 def logincheck(request):
     user = authenticate(username=request.POST.get('Username'), password=request.POST.get('Password'))
-    course_obj = null
+    course_obj = None
     course_sessions_list = Session.objects.filter(course=course_obj)
     if user is not None:
         # the password verified for the user
@@ -71,7 +71,7 @@ def handlelogin(request):
     
     else:    
         user = authenticate(username=request.POST.get('Username'), password=request.POST.get('Password'))
-        course_obj = null
+        course_obj = None
         course_sessions_list = Session.objects.filter(course=course_obj)
         if user is not None:
             # the password verified for the user
