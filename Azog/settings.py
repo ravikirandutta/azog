@@ -58,7 +58,11 @@ WSGI_APPLICATION = 'Azog.wsgi.application'
 
 
 import os
-is_local = os.environ['local']
+is_local = False
+try:
+	is_local = os.environ['local']
+except KeyError:
+	print "Environment is not local"
 
 if is_local:
 	DATABASES = {
