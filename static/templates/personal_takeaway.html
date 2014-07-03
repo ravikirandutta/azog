@@ -7,14 +7,14 @@
                       <h3><a href="{% url 'course_detail' course.id %}"> {{ course.course_name }} </a> </h3>
                       </div>
                       <div class="col-md-4 col-md-offset-1">
-                      <h3   align="center" >{{ session.session_name }}</h3>
+                      <h3   align="center" >Your Personlaized Notes</h3>
                       </div>
                       <div class="col-md-2 col-md-offset-1">
                       <h3><a href="{% url 'session_detailall' session.id %}"> Classmate's Notes</a> </h3>
                       </div>
                        </div>    
                            
-                           <div class="input-xlarge">
+                          <!-- <div class="input-xlarge">
                               <!--<div class="input-group input-group-lg">-->
                               <form action="{% url 'save_notes'  %}" class="input-group input-group-lg" method="post"> {% csrf_token %}
                                   <input type="hidden"  name="session.id"  value="{{ session.id }}" />
@@ -25,7 +25,7 @@
                               <span class="input-group-addon"><button class="btn-group btn-success" type="submit" name="create" value="Create">post</button></span>
                               </input>
                               </form>
-                        </div>
+                        </div>-->
                            
                          <!--<div class="row marketing" >-->
                                
@@ -37,12 +37,9 @@
                               
                                    <!--<div class="col-md-8 col-md-offset-1">-->
                                     
-                                    <p   align="center"> {{ notes.notes |linebreaks }}  - by {{ notes.user }} <span class="badge">14</span>
-                                    {% if user = notes.user %}
+                                    <p   align="center">{{ notes.notes }}  - by {{ notes.user }}
                                     <button class="btn-group btn-success" id="make_public{{ notes.id}}" onclick="make_public1({{ notes.id}},'make_public{{ notes.id}}')" >
                                         {% if notes.is_public %} Make Private   {% else  %} Make Public {%  endif  %}</button>
-                                    {%  endif  %}
-                                    </p> 
                                     
                                    <!--</div>-->
                                </li>
@@ -53,30 +50,9 @@
                               </ul>
                          <!--</div>-->
                               
- <script type="text/javascript">
-         function make_public1(takeawayID,button_id) {
-            
-               $.ajax({
-                    type: "GET",
-                    url: "/takeaway/notes/makepublic/",
-                    data: "takeaway_id="+takeawayID,
-                    success: function(data){
-                     //console.log(button_id   );
-                     //alert(button_id);
-                     if (data=='True') {
-                         $("#"+button_id).html('Make Private');
-                     }else {
-                         $("#"+button_id).html('Make Public');
-                     }
-                     
-                       }
-                });
-         }
-           
-       
-</script>        
+                          
                            
                  {% endblock %}
                  
-
-
+               
+</html>

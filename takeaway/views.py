@@ -120,7 +120,7 @@ def sessiondetail(request,session_id=1):
 def sessiondetailall(request,session_id=1):
     session_obj = Session.objects.get(pk=session_id)
     course_obj = session_obj.course
-    sessions_notes_list = TakeAway.objects.filter(session=session_obj)
+    sessions_notes_list = TakeAway.objects.filter(session=session_obj).filter(is_public=True)
     return render_to_response("takeawaydetail.html",{'course':course_obj,'session':session_obj,'sessions_notes_list':sessions_notes_list},RequestContext(request))
 
 def savenotes(request):
@@ -133,7 +133,15 @@ def savenotes(request):
     takeaway.save()
     sessions_notes_list = TakeAway.objects.filter(session=session_obj).filter(user=request.user)
     return render_to_response("takeawaydetail.html",{'course':course_obj,'session':session_obj,'sessions_notes_list':sessions_notes_list},RequestContext(request))
+def make_public(request):
     
+    takeaway_id = request.GET.get('takeaway_id')
+    #takeaway_id = 10
+    takeaway = TakeAway.objects.get(pk=takeaway_id)
+    takeaway_user = takeaway.user
+    takeaway.toggle_public()
+    takeaway.save()
+    return HttpResponse( str(takeaway.is_public))
 def initload(request):
     User(username="atluri",password="abc123").save()
     User(username="ravi",password="abc123").save()
@@ -153,7 +161,7 @@ def initload(request):
     course1 = Course.objects.get(course_name="STRATEGY")
     course2 = Course.objects.get(course_name="FINANCE")
     course3 = Course.objects.get(course_name="MARKETING")
-    course1.add(students=[user1,user2])
+    #course1.add(students=[user1,user2])
     Session(course=course1,session_name="Week 1 : Introduction to Strategic Planning",session_dt="2014-06-23").save()
     Session(course=course1,session_name="Week 2 : Dynamics of Strategic Planning",session_dt="2014-06-23").save()
     Session(course=course1,session_name="Week 3 : Mastering Strategic Planning",session_dt="2014-06-23").save()

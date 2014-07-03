@@ -64,7 +64,14 @@ class TakeAway(models.Model):
     created_dt = models.DateTimeField(auto_now_add=True,auto_now=False)
     updated_dt = models.DateTimeField(auto_now_add=False,auto_now=True)
     user = models.ForeignKey(User)
+    is_public = models.BooleanField(default=False)
     
     def __unicode__(self):
         return smart_unicode(self.notes[:400])
+    def toggle_public(self):
+        if self.is_public:
+            self.is_public = False
+        else:
+            self.is_public = True
+        
 
