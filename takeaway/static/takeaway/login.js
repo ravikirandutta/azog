@@ -3,7 +3,7 @@ $("#new_user").click(function(){
   if ($('#new_user').val() == 'Register') {
     $('#mode').val ("Register") ;
     //alert("Inside register If");
-    //alert("Mode values is : " + $('#mode').val());
+    alert("Mode values is : " + $('#mode').val());
     $("#login_form").submit();
   } else {
   $('#sync').addClass('registerMode');
@@ -14,6 +14,8 @@ $("#new_user").click(function(){
   $('#sync .spinner').animate({top:'370px'},speed);
   $('#sync > span').animate({top:'125px'},speed);
   $('#new_user').val ("Register") ;
+  $('#mode').val ("Register") ;
+  alert("Mode values is : " + $('#mode').val());
 }
 });
 

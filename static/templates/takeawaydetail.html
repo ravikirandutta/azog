@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 {% extends 'basedetail.html' %}
-
+{% load staticfiles %}
 {% block content %}
                       <div class="row marketing" >
                       <div class="col-md-2 col-md-offset-1">
                       <h3><a href="{% url 'course_detail' course.id %}"> {{ course.course_name }} </a> </h3>
                       </div>
                       <div class="col-md-4 col-md-offset-1">
-                      <h3   align="center" >{{ session.session_name }}</h3>
+                      <h3   align="center" ><a href="{% url 'session_detail' session.id %}">{{ session.session_name }}</a></h3>
                       </div>
                       <div class="col-md-2 col-md-offset-1">
                       <h3><a href="{% url 'session_detailall' session.id %}"> Classmate's Notes</a> </h3>
@@ -37,11 +37,22 @@
                               
                                    <!--<div class="col-md-8 col-md-offset-1">-->
                                     
-                                    <p   align="center"> {{ notes.notes |linebreaks }}  - by {{ notes.user }} <span class="badge">14</span>
+                                    <p   align="center"> {{ notes.notes |linebreaks }}  - by {{ notes.user }} <span id="votecount{{ notes.id}}" class="badge">{{notes.vote_count}}</span>
                                     {% if user = notes.user %}
                                     <button class="btn-group btn-success" id="make_public{{ notes.id}}" onclick="make_public1({{ notes.id}},'make_public{{ notes.id}}')" >
                                         {% if notes.is_public %} Make Private   {% else  %} Make Public {%  endif  %}</button>
+                                    
+                                    
                                     {%  endif  %}
+                                    <button id="thumbsup{{ notes.id}}" name="foo" value="bar" onclick="vote({{ notes.id}},'thumbsup{{ notes.id}}',1)" >
+                                        <img src="{% static "takeaway/media/thumbsup.jpg" %}" alt="submit"
+                                             height="30" width="30" />
+                                    </button>
+                                    
+                                   <!-- <button id="thumbsdown{{ notes.id}}" name="foo" value="bar" onclick="vote({{ notes.id}},'thumbsdown{{ notes.id}}',-1)">
+                                        <img src="http://www.clipartbest.com/cliparts/pT5/eAA/pT5eAAMqc.jpeg" alt="submit"
+                                             height="30" width="30"/>
+                                    </button>-->
                                     </p> 
                                     
                                    <!--</div>-->
@@ -54,6 +65,33 @@
                          <!--</div>-->
                               
  <script type="text/javascript">
+   
+         $.ajaxSetup({ 
+            beforeSend: function(xhr, settings) {
+                function getCookie(name) {
+                    var cookieValue = null;
+                    if (document.cookie && document.cookie != '') {
+                        var cookies = document.cookie.split(';');
+                        for (var i = 0; i < cookies.length; i++) {
+                            var cookie = jQuery.trim(cookies[i]);
+                            // Does this cookie string begin with the name we want?
+                        if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+                }
+                if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+                    // Only send the token to relative URLs i.e. locally.
+                    //alert(getCookie('csrftoken'));
+                    xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                }
+            } 
+       });
+//var csrftoken = getCookie('csrftoken');
+
          function make_public1(takeawayID,button_id) {
             
                $.ajax({
@@ -72,6 +110,23 @@
                        }
                 });
          }
+         
+         function vote(takeawayID,button_id,vote_value) {
+            //alert(vote_value)
+               $.ajax({
+                    type: "POST",
+                    url: "/takeaway/notes/vote/",
+                    data: {takeaway_id:takeawayID,vote_value:vote_value },
+                    success: function(data){
+                     //console.log(button_id   );
+                     //alert(data);
+                     $("#votecount"+takeawayID).html(data);
+                     
+                     
+                       }
+                });
+         }
+         
            
        
 </script>        

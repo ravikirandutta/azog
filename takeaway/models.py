@@ -55,7 +55,7 @@ class Enrollment(models.Model):
     #def __unicode__(self):
     #    return smart_unicode(self.student + self.course) 
     
-    
+
 
 class TakeAway(models.Model):
     course = models.ForeignKey(Course) 
@@ -65,6 +65,7 @@ class TakeAway(models.Model):
     updated_dt = models.DateTimeField(auto_now_add=False,auto_now=True)
     user = models.ForeignKey(User)
     is_public = models.BooleanField(default=False)
+    vote_count = models.IntegerField(default=0)
     
     def __unicode__(self):
         return smart_unicode(self.notes[:400])
@@ -73,5 +74,34 @@ class TakeAway(models.Model):
             self.is_public = False
         else:
             self.is_public = True
+    
+            
+    
+
+
+class Vote(models.Model):
+    VOTE_VALUES = (
+    (1, 'UpVote'),
+    (0, 'Nuetral'),
+    (-1, 'DownVote'),
+    )
+    takeaway = models.ForeignKey(TakeAway)
+    user = models.ForeignKey(User)
+    vote_value = models.IntegerField(choices=VOTE_VALUES, default=0)
+    already_voted = models.BooleanField(default=True) # If already voted then can only change the vote . Cannot stack on votes. Possible values 1 or -1 as of now
+    
+    def __unicode__(self):
+        return smart_unicode(self.vote_value)
+    
+    def set_vote(self,value):
+        if self.already_voted and vote_value == value :
+            pass# do nothing as user is trying to double vote
+           
+        elif self.already_voted and vote_value <> value and (value == 1 or value == 0 or value == -1) :
+            vote_value = value
+        elif not self.already_voted and  (value == 1 or value == 0 or value == -1) :
+            vote_value = value
+    
+        
         
 

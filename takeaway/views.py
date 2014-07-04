@@ -1,8 +1,9 @@
 from django.shortcuts import render,render_to_response,RequestContext, HttpResponseRedirect, HttpResponse
 from django.core.context_processors import request
+from django.views.decorators.csrf import requires_csrf_token
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.models import User
-from takeaway.models import Course,Session,TakeAway,School,Enrollment
+from takeaway.models import Course,Session,TakeAway,School,Enrollment,Vote
 
 # Create your views here.
 def home(request):
@@ -120,7 +121,7 @@ def sessiondetail(request,session_id=1):
 def sessiondetailall(request,session_id=1):
     session_obj = Session.objects.get(pk=session_id)
     course_obj = session_obj.course
-    sessions_notes_list = TakeAway.objects.filter(session=session_obj).filter(is_public=True)
+    sessions_notes_list = TakeAway.objects.filter(session=session_obj).filter(is_public=True).order_by('-vote_count')
     return render_to_response("takeawaydetail.html",{'course':course_obj,'session':session_obj,'sessions_notes_list':sessions_notes_list},RequestContext(request))
 
 def savenotes(request):
@@ -133,18 +134,54 @@ def savenotes(request):
     takeaway.save()
     sessions_notes_list = TakeAway.objects.filter(session=session_obj).filter(user=request.user)
     return render_to_response("takeawaydetail.html",{'course':course_obj,'session':session_obj,'sessions_notes_list':sessions_notes_list},RequestContext(request))
+
+@requires_csrf_token
 def make_public(request):
     
     takeaway_id = request.GET.get('takeaway_id')
+    
     #takeaway_id = 10
     takeaway = TakeAway.objects.get(pk=takeaway_id)
     takeaway_user = takeaway.user
     takeaway.toggle_public()
     takeaway.save()
     return HttpResponse( str(takeaway.is_public))
+
+@requires_csrf_token
+def vote(request):
+    #user = request.POST.get('user')
+    user=request.user
+    #print >>sys.stderr, user
+    takeaway_id = request.POST.get('takeaway_id')
+    p_vote_value = request.POST.get('vote_value')
+    vote_value = int(p_vote_value)
+    #takeaway_id = 10
+    takeaway = TakeAway.objects.get(pk=takeaway_id)
+    takeaway_user = takeaway.user
+    vote_list = Vote.objects.filter(user=user,takeaway=takeaway)
+    #TODO: backend logic to 
+    if vote_list is not None and vote_list.count() >0 :
+        vote = vote_list[0]
+        current_value = vote.vote_value
+        vote.vote_value = vote_value
+        vote.save()
+        increment = 0
+        if current_value == vote_value:
+            increment=0;
+        elif current_value == -vote_value:
+            increment = 2* vote_value
+            
+        takeaway.vote_count = takeaway.vote_count + increment 
+    elif vote_list.count() ==0 :
+        vote  = Vote(user=user,takeaway=takeaway,vote_value=vote_value).save()
+        takeaway.vote_count = takeaway.vote_count + vote_value 
+      # incrementing or decrementing the vote value   
+    takeaway.save()
+    return HttpResponse( str(takeaway.vote_count))
+
 def initload(request):
-    User(username="atluri",password="abc123").save()
-    User(username="ravi",password="abc123").save()
+    User.objects.create_user(username="atluri",password="abc123").save()
+    User.objects.create_user(username="ravi",password="abc123").save()
     
     user1=User.objects.get(username="atluri")
     user2=User.objects.get(username="ravi")
@@ -161,7 +198,10 @@ def initload(request):
     course1 = Course.objects.get(course_name="STRATEGY")
     course2 = Course.objects.get(course_name="FINANCE")
     course3 = Course.objects.get(course_name="MARKETING")
-    #course1.add(students=[user1,user2])
+    course1.students.add(user1,user2)
+    course2.students.add(user1,user2)
+    course1.save()
+    course2.save()
     Session(course=course1,session_name="Week 1 : Introduction to Strategic Planning",session_dt="2014-06-23").save()
     Session(course=course1,session_name="Week 2 : Dynamics of Strategic Planning",session_dt="2014-06-23").save()
     Session(course=course1,session_name="Week 3 : Mastering Strategic Planning",session_dt="2014-06-23").save()

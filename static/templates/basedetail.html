@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
-
+    {% load staticfiles %}
     <title>Jumbotron Template for Bootstrap</title>
 
     <!-- Bootstrap core CSS -->
@@ -48,7 +48,7 @@
           <ul class ="nav navbar-nav navbar-right">
             <li><a href ="#">Home </a></li>
             <li><a href ="#">Blog </a></li>
-            <li><a href ="#">Social Media </a></li>
+            <li><a target="_blank"  href ="https://docs.google.com/forms/d/1tOiBrEnZpgfOZwrKaosp8Rl13BzOqh_kYd1NX75F2CU/viewform">Submit New Features/Feedback </a></li>
             <li><a href ="#">About </a></li>
             <li><a  href="{% url 'logoutuser' %}">Logout</a> </li>
             
