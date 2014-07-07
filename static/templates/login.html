@@ -9,7 +9,7 @@
     <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
     <script src="{% static "takeaway/login.js" %}"></script>
 
-<div class="container" style="top: 20px;">
+<div class="container" style="top: 100px;">
   <div id="sync" class="center">
 <form action="{% url 'handlelogin'  %}" method="post" name="login_form" id="login_form"> {% csrf_token %}
 <input id="new_user" class="new_user" type="button" value="I am a new user" lang="en-US" style="top: 13px;">
@@ -21,6 +21,7 @@
   </form>
    </div>
 </div>
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
   </body>
 </html>

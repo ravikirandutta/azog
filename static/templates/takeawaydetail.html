@@ -33,11 +33,14 @@
                                <ul class="list-group"> 
                                
                                    {% for notes in sessions_notes_list %}
-                               <li class="list-group-item">
+                               <li class="list-group-item" id="P_{{ notes.id}}">
                               
                                    <!--<div class="col-md-8 col-md-offset-1">-->
-                                    
-                                    <p   align="center"> {{ notes.notes |linebreaks }}  - by {{ notes.user }} <span id="votecount{{ notes.id}}" class="badge">{{notes.vote_count}}</span>
+                                   
+                                    <!--<p   align="center" >-->
+                                       
+                                       <div id="{{ notes.id}}" class="editableNotes" >{{ notes.notes |linebreaks }} </div>
+                                       - by {{ notes.user }} <span id="votecount{{ notes.id}}" class="badge">{{notes.vote_count}}</span>
                                     {% if user = notes.user %}
                                     <button class="btn-group btn-success" id="make_public{{ notes.id}}" onclick="make_public1({{ notes.id}},'make_public{{ notes.id}}')" >
                                         {% if notes.is_public %} Make Private   {% else  %} Make Public {%  endif  %}</button>
@@ -48,12 +51,13 @@
                                         <img src="{% static "takeaway/media/thumbsup.jpg" %}" alt="submit"
                                              height="30" width="30" />
                                     </button>
-                                    
-                                   <!-- <button id="thumbsdown{{ notes.id}}" name="foo" value="bar" onclick="vote({{ notes.id}},'thumbsdown{{ notes.id}}',-1)">
-                                        <img src="http://www.clipartbest.com/cliparts/pT5/eAA/pT5eAAMqc.jpeg" alt="submit"
-                                             height="30" width="30"/>
-                                    </button>-->
-                                    </p> 
+                                    {% if user = notes.user %}
+                                    <button id="delete{{ notes.id}}" name="foo" value="bar" onclick="deleteNotes({{ notes.id}})">
+                                        <img src="{% static "takeaway/media/delete.jpg" %}" alt="submit"
+                                             height="30" width="30"/> 
+                                    </button>
+                                    {%  endif  %}  
+                                   <!-- </p> -->
                                     
                                    <!--</div>-->
                                </li>
@@ -65,6 +69,10 @@
                          <!--</div>-->
                               
  <script type="text/javascript">
+   
+    $(document).ready(function() {
+          $(".editableNotes").click(divClicked);
+      });
    
          $.ajaxSetup({ 
             beforeSend: function(xhr, settings) {
@@ -95,7 +103,7 @@
          function make_public1(takeawayID,button_id) {
             
                $.ajax({
-                    type: "GET",
+                    type: "POST",
                     url: "/takeaway/notes/makepublic/",
                     data: "takeaway_id="+takeawayID,
                     success: function(data){
@@ -127,7 +135,68 @@
                 });
          }
          
-           
+           function divClicked() {
+            //alert(10);
+               var divHtml = $(this).text();
+               //var takeaway_id = $(this).id();
+               var takeaway_id = this.id;
+               //var component = '<textarea id="'+takeaway_id+'" />'; 
+               var component = '<textarea class="col-xs-12" id="'+takeaway_id+'" />';
+               var editableText = $(component); 
+               //var editableText = $("<textarea />");
+               editableText.val(divHtml);
+               $(this).replaceWith(editableText);
+               //alert(editableText);
+               editableText.focus();
+               // setup the blur event for this new textarea
+               editableText.blur(editableTextBlurred);
+               
+           }
+
+      function editableTextBlurred() {
+          var html = $(this).val();
+          var id = this.id;
+          var viewableText = $('<div class="editableNotes" id="'+id+'">');
+          viewableText.html(html);
+          $(this).replaceWith(viewableText);
+          // setup the click event for this new div
+          viewableText.click(divClicked);
+          saveEditedNotes(id,html);
+      }
+      
+      function saveEditedNotes(takeawayID,text) {
+            
+               $.ajax({
+                    type: "POST",
+                    url: "/takeaway/notes/edit/",
+                    data: {takeaway_id:takeawayID,takeaway_text:text },
+                    success: function(data){
+                     //console.log(button_id   );
+                     //alert(data);
+                    
+                     
+                       }
+                });
+         }
+         
+         function deleteNotes(takeawayID) {
+            
+               $.ajax({
+                    type: "POST",
+                    url: "/takeaway/notes/delete/",
+                    data: {takeaway_id:takeawayID},
+                    success: function(data){
+                     //console.log(button_id   );
+                     //alert(data);
+                     //var div = $("span[id=data]").remove();
+                     $("li[id='P_" + data + "']").remove();
+                    //$(takeawayID).remove();
+                     
+                       }
+                });
+         }
+
+     
        
 </script>        
                            
