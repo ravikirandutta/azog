@@ -2,6 +2,7 @@
 $("#new_user").click(function(){
   if ($('#new_user').val() == 'Register') {
     $('#mode').val ("Register") ;
+    
     $("#login_form").submit();
   } else {
   $('#sync').addClass('registerMode');
@@ -13,7 +14,19 @@ $("#new_user").click(function(){
   $('#sync > span').animate({top:'125px'},speed);
   $('#new_user').val ("Register") ;
   $('#mode').val ("Register") ;
+  
 }
 });
 
 });
+ 
+ function show_register(){
+  $("#login").hide();
+  $("#register").show();
+ }
+ 
+  function show_login(){
+  $("#login").show();
+  $("#register").hide();
+ }
+
