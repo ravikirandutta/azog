@@ -106,7 +106,7 @@ def logoutuser(request):
 def coursedetail(request,course_id=1):
     course_obj = Course.objects.get(pk=course_id)
     course_sessions_list = Session.objects.filter(course=course_obj)
-    return render_to_response("coursedetail.html",{'course':course_obj,'course_sessions_list':course_sessions_list,'userid':request.user})
+    return render_to_response("coursedetail.html",{'course':course_obj,'course_sessions_list':course_sessions_list,'userid':request.user},RequestContext(request))
     #return HttpResponse( course_sessions_list)
 
 @login_required   
@@ -114,7 +114,7 @@ def personal_course_detail(request,course_id=1):
     course_obj = Course.objects.get(pk=course_id)
     course_sessions_list = Session.objects.filter(course=course_obj)
     sessions_notes_list = TakeAway.objects.filter(course=course_obj,user=request.user).order_by('session')
-    return render_to_response("personal_takeaway.html",{'course':course_obj,'course_sessions_list':course_sessions_list,'sessions_notes_list':sessions_notes_list,'userid':request.user})
+    return render_to_response("personal_takeaway.html",{'course':course_obj,'course_sessions_list':course_sessions_list,'sessions_notes_list':sessions_notes_list},RequestContext(request))
 @login_required   
 def public_course_detail(request,course_id=1):
     course_obj = Course.objects.get(pk=course_id)

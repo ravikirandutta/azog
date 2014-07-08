@@ -1,56 +1,128 @@
 <!DOCTYPE html>
 {% extends 'basedetail.html' %}
-
+{% load staticfiles %}
+<script src="{% static "takeaway/take_away_detail.js" %}"></script>
 {% block content %}
                       <div class="row marketing" >
                       <div class="col-md-2 col-md-offset-1">
                       <h3><a href="{% url 'course_detail' course.id %}"> {{ course.course_name }} </a> </h3>
                       </div>
                       <div class="col-md-4 col-md-offset-1">
-                      <h3   align="center" >Your Personlaized Notes</h3>
+                      <h3   align="center" ><a href="{% url 'personal_course_detail' course.id %}">Your Personalized Notes</a></h3>
                       </div>
                       <div class="col-md-2 col-md-offset-1">
-                      <h3><a href="{% url 'session_detailall' session.id %}"> Classmate's Notes</a> </h3>
+                      <h3><a href="{% url 'public_course_detail' course.id %}"> Classmate's Notes</a> </h3>
+                      
                       </div>
                        </div>    
                            
                           <!-- <div class="input-xlarge">
                               <!--<div class="input-group input-group-lg">-->
-                              <form action="{% url 'save_notes'  %}" class="input-group input-group-lg" method="post"> {% csrf_token %}
-                                  <input type="hidden"  name="session.id"  value="{{ session.id }}" />
-                                  <!--<input type="hidden"  name="session.id"  value="${sessionInstance?.id}" />
-                                  <input type="hidden"  name="user.id"  value="1" />-->
-                              <textarea class="col-xs-12" name="text"  ></textarea>
-                              <!--<input type="textarea" name="text"  class="form-control" >--> <!--class="form-control"-->
-                              <span class="input-group-addon"><button class="btn-group btn-success" type="submit" name="create" value="Create">post</button></span>
-                              </input>
-                              </form>
-                        </div>-->
+                        
+                        </div>
                            
                          <!--<div class="row marketing" >-->
                                
-                        
-                               <ul class="list-group"> 
+                               
+                             <div class="accordion-expand-holder">
+                                <button type="button" class="open">Expand all</button>
+                                <button type="button" class="collapse1">Collapse all</button>
+                               </div>
+                             
+                             <div id="accordion">
+                              <!-- <ul class="list-group"> -->
                                
                                    {% for notes in sessions_notes_list %}
-                               <li class="list-group-item">
+                                    <li class="list-group-item">
+                                        
+                                        <h3>{{notes.session}}</h3>
                               
                                    <!--<div class="col-md-8 col-md-offset-1">-->
                                     
-                                    <p   align="center">{{ notes.notes }}  - by {{ notes.user }}
+                                    <p   align="center"> {{ notes.notes }}  
+                                    - by {{ notes.user }} <span id="votecount{{ notes.id}}" class="badge">{{notes.vote_count}}</span>
+                                    <!--{% if user == notes.user %}-->
                                     <button class="btn-group btn-success" id="make_public{{ notes.id}}" onclick="make_public1({{ notes.id}},'make_public{{ notes.id}}')" >
                                         {% if notes.is_public %} Make Private   {% else  %} Make Public {%  endif  %}</button>
                                     
+                                    
+                                    <!--{%  endif  %}-->
+                                    {% if user != notes.user %}
+                                    <button id="thumbsup{{ notes.id}}" name="foo" value="bar" onclick="vote({{ notes.id}},'thumbsup{{ notes.id}}',1)" >
+                                        <img src="{% static "takeaway/media/thumbsup.jpg" %}" alt="submit"
+                                             height="30" width="30" />
+                                    </button>
+                                    {%  endif  %}
+                                    <!--{% if user = notes.user %}-->
+                                    <button id="delete{{ notes.id}}" name="foo" value="bar" onclick="deleteNotes({{ notes.id}})">
+                                        <img src="{% static "takeaway/media/delete.jpg" %}" alt="submit"
+                                             height="30" width="30"/> 
+                                    </button>
+                                   <!-- {%  endif  %} --> 
+                                    </p>
                                    <!--</div>-->
                                </li>
                               
                             {% endfor %}
                                    
                                
-                              </ul>
+                             <!-- </ul>-->
+                               
+                             </div>
                          <!--</div>-->
-                              
-                          
+                                 
+               <script  type="text/javascript">
+                   // Accordion - Expand All #01
+                   
+ 
+//$(function () {
+    $("#accordion").accordion({
+        collapsible:true,
+        active:false
+    });
+    var icons = $( "#accordion" ).accordion( "option", "icons" );
+    
+    
+    $('.open').click(function () {
+        $('.ui-accordion-header').removeClass('ui-corner-all').addClass('ui-accordion-header-active ui-state-active ui-corner-top').attr({
+            'aria-selected': 'true',
+            'tabindex': '0'
+        });
+        $('.ui-accordion-header-icon').removeClass(icons.header).addClass(icons.headerSelected);
+        $('.ui-accordion-content').addClass('ui-accordion-content-active').attr({
+            'aria-expanded': 'true',
+            'aria-hidden': 'false'
+        }).show();
+        $(this).attr("disabled","disabled");
+        $('.collapse1').removeAttr("disabled");
+       
+    });
+    $('.collapse1').click(function () {
+        $('.ui-accordion-header').removeClass('ui-accordion-header-active ui-state-active ui-corner-top').addClass('ui-corner-all').attr({
+            'aria-selected': 'false',
+            'tabindex': '-1'
+        });
+        $('.ui-accordion-header-icon').removeClass(icons.headerSelected).addClass(icons.header);
+        $('.ui-accordion-content').removeClass('ui-accordion-content-active').attr({
+            'aria-expanded': 'false',
+            'aria-hidden': 'true'
+        }).hide();
+        $(this).attr("disabled","disabled");
+        $('.open').removeAttr("disabled");
+    });
+    $('.ui-accordion-header').click(function () {
+        $('.open').removeAttr("disabled");
+        $('.collapse1').removeAttr("disabled");
+        
+    });
+//});
+
+    
+$(document).ready(function() {
+    //alert('expandall');
+          $('.open').click();
+      });
+</script>                
                            
                  {% endblock %}
                  

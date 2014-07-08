@@ -2,29 +2,27 @@
 {% extends 'basedetail.html' %}
 
 {% block content %}
-                      Welcome {{ user }}
+                      Welcome {{ user.username }}
                       <h1   align="center" >{{ course.course_name }}</h1>  </a> 
                              
                          <div class="row marketing" >
                             
                                <div class="list-group"> 
                                
-                                   {% for session in course_sessions_list %}
+                               {% for session in course_sessions_list %}
                                <div class="list-group-item">
                               
                                    <div class="container">
-                                   <a href="{% url 'session_detail' session.id %}">  <h2   align="center">{{ session.session_name }}</h2>  </a> 
-                                
-                               
-                                
-                                
-                               </div    >
-                              
+                                   <a href="{% url 'session_detail' session.id %}">
+                                    <h3   align="left">{{ session.session_name }}</h3>
+                                         
+                                    </div >
+                               </div>
                             {% endfor %}
                                    
                                </div>
                               </div>
-                         </div>
+                        
                             
                           
                            

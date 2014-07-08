@@ -9,7 +9,7 @@
     <meta name="author" content="">
     <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
     {% load staticfiles %}
-    <title>Jumbotron Template for Bootstrap</title>
+    <title>TakeAway App</title>
 
     <!-- Bootstrap core CSS -->
     <link href="http://getbootstrap.com/dist/css/bootstrap.css" rel="stylesheet">
@@ -24,20 +24,30 @@
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+      <script src="{% static "takeaway/take_away_detail.js" %}"></script>
     <![endif]-->
     
        <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    
     <script src="http://getbootstrap.com/dist/js/bootstrap.js"></script>
+    
+      <!-- JQUERY UI core JavaScript
+    ================================================== -->
+    
+    <link rel="stylesheet" href="{% static "takeaway/jquery-ui.min.css" %}">
+    <link rel="stylesheet" href="{% static "takeaway/takeaway.css" %}">
+    <script src="{% static "takeaway/jquery-ui.min.js" %}"></script>
+        
   </head>
 
   <body>
 
     <div class="navbar navbar-inverse navbar-static-top" role="navigation">
       <div class="container">
-        <a class="navbar-brand" href="{% url 'takeawayhome' %}">TakeAHome</a>
+        <a class="navbar-brand" href="{% url 'takeawayhome' %}">TakeAway Home</a>
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
@@ -47,7 +57,7 @@
         <div class="collapse navbar-collapse navHeaderCollapse">
           <ul class ="nav navbar-nav navbar-right">
             <li><a href ="#">Home </a></li>
-            <li><a href ="#">Blog </a></li>
+            <li><a href ="#">{{ user.username }} </a></li>
             <li><a target="_blank"  href ="https://docs.google.com/forms/d/1tOiBrEnZpgfOZwrKaosp8Rl13BzOqh_kYd1NX75F2CU/viewform">Submit New Features/Feedback </a></li>
             <li><a href ="#">About </a></li>
             <li><a  href="{% url 'logoutuser' %}">Logout</a> </li>
@@ -78,19 +88,20 @@
     
 
    
-
+ <h4>Welcome {{ user.username }}</h4>
 
       <!-- Example row of columns -->
-      <div class="row">
-         <!--<div class="container" >
+     <!-- <div class="row"> -->
+         <div class="container" >
        <!-- <div class="col-md-4" >-->
-            <div class="jumbotron">{% block content %}
+         <!--   <div class="jumbotron">-->
+         {% block content %}
         
         {% endblock %}
            <!--</div>
             </div>-->
        <!-- </div>-->
-      </div>
+      <!--</div> -->
       
        
       </div>
