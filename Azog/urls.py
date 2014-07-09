@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, include, url
-
+import notifications
 from django.contrib import admin
 admin.autodiscover()
 
@@ -14,7 +14,7 @@ urlpatterns = patterns('',
     url(r'^login/$', 'takeaway.views.handlelogin', name='handlelogin'),
     url(r'^logout/$', 'takeaway.views.logoutuser', name='logoutuser'),
     url(r'^takeaway/auth/', 'takeaway.views.logincheck', name='login'),
-    
+    url('^inbox/notifications/', include(notifications.urls)), 
     url(r'^takeaway/$', 'takeaway.views.home', name='takeawayhome'),
       # ex: /takeaway/course/course_id
     url(r'^takeaway/*/$', 'takeaway.views.coursedetail', name='course_detail'),
