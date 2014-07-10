@@ -41,7 +41,7 @@
     <link rel="stylesheet" href="{% static "takeaway/takeaway.css" %}">
     <script src="{% static "takeaway/jquery-ui.min.js" %}"></script>
     <script src="{% static "takeaway/notify.min.js" %}"></script>
-
+    <script src="{% static "takeaway/app.js" %}"></script>
   </head>
 
   <body>
@@ -57,9 +57,9 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-        <div class="collapse navbar-collapse navHeaderCollapse">
+        <div class="collapse navbar-collapse navHeaderCollapse" style="position:relative">
           <ul class ="nav navbar-nav navbar-right">
-            <li><a href ="#" >Home </a></li>
+            <li><a href ="#" id="notifications"  >Notifications </a></li>
             <li><a href ="#">{{ user.username }} </a></li>
             <li><a target="_blank"  href ="https://docs.google.com/forms/d/1tOiBrEnZpgfOZwrKaosp8Rl13BzOqh_kYd1NX75F2CU/viewform">Submit New Features/Feedback </a></li>
             <li><a href ="#">About </a></li>
@@ -72,9 +72,21 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
+          <div id="user_notifications" class="col-md-4 list-group" style="position:absolute;top:50px;left:640px;display:none;">
 
+                          <ul class="list-group">
+                          {%for notification in notifications%}
+
+             <li class="list-group-item">{{notification}}</li>
+
+
+                          {%endfor%}
+
+              <li class="list-group-item"><button class="btn" id="mark_read">Mark as read</button><span id="mark_as_read"></span></li>
+              </ul>
+                        </div>
+          </div>
            <!--<a  href="{% url 'logoutuser' %}">Logouttt</a>-->
-        </div>
 
 
           <!--<form class="navbar-form navbar-right" role="form">

@@ -58,6 +58,7 @@ def handlelogin(request):
     username = request.POST.get('Username')
 
 
+
     if mode == "Register" :
         if User.objects.filter(username=username).count():
             user = authenticate(username=username, password=request.POST.get('Password'))
@@ -85,7 +86,8 @@ def handlelogin(request):
                 login(request,user)
                 logged_user = User.objects.get(username=request.POST.get('Username'))
                 course_instance_list = Course.objects.filter(students=logged_user)
-                return render_to_response("course_list.html",{'course_instance_list':course_instance_list,'logged_user':logged_user},RequestContext(request))
+                notifications = logged_user.notifications.unread()
+                return render_to_response("course_list.html",{'course_instance_list':course_instance_list,'logged_user':logged_user,'notifications':notifications},RequestContext(request))
                 #return render_to_response("coursedetail.html",{'course':course_obj,'course_sessions_list':course_sessions_list,'userid':request.user},RequestContext(request))
 
             else:
@@ -107,8 +109,7 @@ def logoutuser(request):
 def coursedetail(request,course_id=1):
     course_obj = Course.objects.get(pk=course_id)
     course_sessions_list = Session.objects.filter(course=course_obj)
-    notifications = request.user.notifications.unread()
-    return render_to_response("coursedetail.html",{'course':course_obj,'course_sessions_list':course_sessions_list,'userid':request.user,'notifications':notifications},RequestContext(request))
+    return render_to_response("coursedetail.html",{'course':course_obj,'course_sessions_list':course_sessions_list,'userid':request.user},RequestContext(request))
     #return HttpResponse( course_sessions_list)
 
 @login_required
@@ -146,12 +147,7 @@ def savenotes(request):
     takeaway =  TakeAway( course=course_obj,session=session_obj,notes=takeaway,user=request.user)
     takeaway.save()
     sessions_notes_list = TakeAway.objects.filter(session=session_obj).filter(user=request.user)
-    recipients = User.objects.all()
-    for recipient in recipients:
-       message =  ' posted a takeaway on '+ str(session_obj)
-       notify.send(request.user,recipient=recipient, verb=message)
-       # notify.send(request.user, recipient=recipient, verb=u'posted', action_object=takeaway,
-        #    description= "takeaway", target= session_obj)
+
 
     return render_to_response("takeawaydetail.html",{'course':course_obj,'session':session_obj,'sessions_notes_list':sessions_notes_list},RequestContext(request))
 
@@ -177,7 +173,7 @@ def notes_edit(request):
 
 @requires_csrf_token
 def make_public(request):
-
+    user = request.user
     takeaway_id = request.POST.get('takeaway_id')
 
     #takeaway_id = 10
@@ -185,7 +181,13 @@ def make_public(request):
     takeaway_user = takeaway.user
     takeaway.toggle_public()
     takeaway.save()
+    recipients = User.objects.all()
+    for recipient in recipients:
+        message =  ' posted a takeaway on '+ str(takeaway.session)
+        notify.send(request.user,recipient=recipient, verb=message)
 
+    # notify.send(request.user, recipient=recipient, verb=u'posted', action_object=takeaway,
+        #    description= "takeaway", target= session_obj)
     return HttpResponse( str(takeaway.is_public))
 
 @requires_csrf_token
@@ -219,6 +221,11 @@ def vote(request):
       # incrementing or decrementing the vote value
     takeaway.save()
     return HttpResponse( str(takeaway.vote_count))
+
+def mark_as_read(request):
+    user = request.user
+    user.notifications.mark_all_as_read()
+    return HttpResponse(str("success"))
 
 def initload(request):
     User.objects.create_user(username="atluri",password="abc123").save()
