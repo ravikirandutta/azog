@@ -7,6 +7,8 @@ from django.contrib.auth.models import User
 from takeaway.models import Course,Session,TakeAway,School,Enrollment,Vote
 from notifications import notify
 
+
+
 # Create your views here.
 @login_required
 def home(request):
@@ -123,7 +125,19 @@ def public_course_detail(request,course_id=1):
     course_obj = Course.objects.get(pk=course_id)
     course_sessions_list = Session.objects.filter(course=course_obj)
     sessions_notes_list = TakeAway.objects.filter(course=course_obj,is_public=True).order_by('session')
-    return render_to_response("personal_takeaway.html",{'course':course_obj,'course_sessions_list':course_sessions_list,'sessions_notes_list':sessions_notes_list,'userid':request.user})
+
+
+
+    sessions_map = {}
+
+    for session in course_sessions_list:
+        sessions_map[session] = []
+
+    for takeaway in sessions_notes_list:
+
+        sessions_map[takeaway.session].append(takeaway)
+
+    return render_to_response("personal_takeaway.html",{'course':course_obj,'course_sessions_list':course_sessions_list,'sessions_notes_list':sessions_notes_list,'userid':request.user,'sessions_map':sessions_map})
 
 @login_required
 def sessiondetail(request,session_id=1):
