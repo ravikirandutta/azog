@@ -2,25 +2,25 @@
 {% extends 'basedetail.html' %}
 
 {% block content %}
-                   
-                     
+
+
                  {% for course in course_instance_list %}
-                      <div class="row">    
+                      <div class="row">
                          <div class="col-md-4">
                             <div class="container">
-                              <a href="{% url 'course_detail' course.id %}">  <h2   align="center">{{ course.course_name }}</h2>  </a> 
-                                
+                              <a href="{% url 'public_course_detail' course.id %}">  <h2   align="center">{{ course.course_name }}</h2>  </a>
+
                                 <p  align="center" style="font-family:arial;color:black;font-size:10px;">{{ course.course_desc|slice:":150" }} >>>></p>
-                                
+
                          </div>
                         </div>
-                         
-                      </div>  
+
+                      </div>
                             {% endfor %}
-                
-                
-           
+
+
+
                  {% endblock %}
-                 
-                  
+
+
 </html>
