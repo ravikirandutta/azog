@@ -2,8 +2,8 @@
 {% extends 'basedetail.html' %}
 
 {% block content %}
-                      Welcome {{ user.username }}
-                      <h1   align="center" >{{ course.course_name }}</h1>  </a>
+
+                      <h1   align="center" ><a href="{% url 'public_course_detail' course.id %}">{{ course.course_name }}</a></h1>
                       <div class="row">
                          <div class="col-md-9">
                           <ul class="list-group">
