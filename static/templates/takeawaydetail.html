@@ -3,7 +3,7 @@
 {% load staticfiles %}
 {% block content %}
 
-              
+
                       <div class="row marketing" >
                       <div class="col-md-2 col-md-offset-1">
                       <h3><a href="{% url 'course_detail' course.id %}"> {{ course.course_name }} </a> </h3>
@@ -17,8 +17,8 @@
                       <div class="col-md-2 col-md-offset-1">
                       <h3><a href="{% url 'personal_course_detail' course.id %}"> Personal Notes</a> </h3>
                       </div>
-                       </div>    
-                           
+                       </div>
+
                            <div class="input-xlarge">
                               <!--<div class="input-group input-group-lg">-->
                               <form action="{% url 'save_notes'  %}" class="input-group input-group-lg" method="post"> {% csrf_token %}
@@ -31,26 +31,26 @@
                               </input>
                               </form>
                         </div>
-                           
+
                          <!--<div class="row marketing" >-->
-                               
-                        
-                               <ul class="list-group"> 
-                               
+
+
+                               <ul class="list-group">
+
                                    {% for notes in sessions_notes_list %}
                                <li class="list-group-item" id="P_{{ notes.id}}">
-                              
+
                                    <!--<div class="col-md-8 col-md-offset-1">-->
-                                   
+
                                     <!--<p   align="center" >-->
-                                       
+
                                        <div id="{{ notes.id}}" class="editableNotes" >{{ notes.notes |linebreaks }} </div>
                                        - by {{ notes.user }} <span id="votecount{{ notes.id}}" class="badge">{{notes.vote_count}}</span>
                                     {% if user = notes.user %}
                                     <button class="btn-group btn-success" id="make_public{{ notes.id}}" onclick="make_public1({{ notes.id}},'make_public{{ notes.id}}')" >
                                         {% if notes.is_public %} Make Private   {% else  %} Make Public {%  endif  %}</button>
-                                    
-                                    
+
+
                                     {%  endif  %}
                                     <button id="thumbsup{{ notes.id}}" name="foo" value="bar" onclick="vote({{ notes.id}},'thumbsup{{ notes.id}}',1)" >
                                         <img src="{% static "takeaway/media/thumbsup.jpg" %}" alt="submit"
@@ -59,147 +59,26 @@
                                     {% if user = notes.user %}
                                     <button id="delete{{ notes.id}}" name="foo" value="bar" onclick="deleteNotes({{ notes.id}})">
                                         <img src="{% static "takeaway/media/delete.jpg" %}" alt="submit"
-                                             height="30" width="30"/> 
+                                             height="30" width="30"/>
                                     </button>
-                                    {%  endif  %}  
+                                    {%  endif  %}
                                    <!-- </p> -->
-                                    
+
                                    <!--</div>-->
                                </li>
-                              
+
                             {% endfor %}
-                                   
-                               
+
+
                               </ul>
                          <!--</div>-->
-                              
+
  <script type="text/javascript">
-   
-    $(document).ready(function() {
-          $(".editableNotes").click(divClicked);
-      });
-   
-         $.ajaxSetup({ 
-            beforeSend: function(xhr, settings) {
-                function getCookie(name) {
-                    var cookieValue = null;
-                    if (document.cookie && document.cookie != '') {
-                        var cookies = document.cookie.split(';');
-                        for (var i = 0; i < cookies.length; i++) {
-                            var cookie = jQuery.trim(cookies[i]);
-                            // Does this cookie string begin with the name we want?
-                        if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                            break;
-                        }
-                    }
-                }
-                return cookieValue;
-                }
-                if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
-                    // Only send the token to relative URLs i.e. locally.
-                    //alert(getCookie('csrftoken'));
-                    xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-                }
-            } 
-       });
+
+
 //var csrftoken = getCookie('csrftoken');
 
-         function make_public1(takeawayID,button_id) {
-            
-               $.ajax({
-                    type: "POST",
-                    url: "/takeaway/notes/makepublic/",
-                    data: "takeaway_id="+takeawayID,
-                    success: function(data){
-                     //console.log(button_id   );
-                     //alert(button_id);
-                     if (data=='True') {
-                         $("#"+button_id).html('Make Private');
-                     }else {
-                         $("#"+button_id).html('Make Public');
-                     }
-                     
-                       }
-                });
-         }
-         
-         function vote(takeawayID,button_id,vote_value) {
-            //alert(vote_value)
-               $.ajax({
-                    type: "POST",
-                    url: "/takeaway/notes/vote/",
-                    data: {takeaway_id:takeawayID,vote_value:vote_value },
-                    success: function(data){
-                     //console.log(button_id   );
-                     //alert(data);
-                     $("#votecount"+takeawayID).html(data);
-                     
-                     
-                       }
-                });
-         }
-         
-           function divClicked() {
-            //alert(10);
-               var divHtml = $(this).text();
-               //var takeaway_id = $(this).id();
-               var takeaway_id = this.id;
-               //var component = '<textarea id="'+takeaway_id+'" />'; 
-               var component = '<textarea class="col-xs-12" id="'+takeaway_id+'" />';
-               var editableText = $(component); 
-               //var editableText = $("<textarea />");
-               editableText.val(divHtml);
-               $(this).replaceWith(editableText);
-               //alert(editableText);
-               editableText.focus();
-               // setup the blur event for this new textarea
-               editableText.blur(editableTextBlurred);
-               
-           }
 
-      function editableTextBlurred() {
-          var html = $(this).val();
-          var id = this.id;
-          var viewableText = $('<div class="editableNotes" id="'+id+'">');
-          viewableText.html(html);
-          $(this).replaceWith(viewableText);
-          // setup the click event for this new div
-          viewableText.click(divClicked);
-          saveEditedNotes(id,html);
-      }
-      
-      function saveEditedNotes(takeawayID,text) {
-            
-               $.ajax({
-                    type: "POST",
-                    url: "/takeaway/notes/edit/",
-                    data: {takeaway_id:takeawayID,takeaway_text:text },
-                    success: function(data){
-                     //console.log(button_id   );
-                     //alert(data);
-                    
-                     
-                       }
-                });
-         }
-         
-         function deleteNotes(takeawayID) {
-            
-               $.ajax({
-                    type: "POST",
-                    url: "/takeaway/notes/delete/",
-                    data: {takeaway_id:takeawayID},
-                    success: function(data){
-                     //console.log(button_id   );
-                     //alert(data);
-                     //var div = $("span[id=data]").remove();
-                     $("li[id='P_" + data + "']").remove();
-                    //$(takeawayID).remove();
-                     
-                       }
-                });
-         }
 
    // Accordion - Expand All #01
 $(function () {
@@ -237,14 +116,14 @@ $(function () {
     $('.ui-accordion-header').click(function () {
         $('.open').removeAttr("disabled");
         $('.close').removeAttr("disabled");
-        
+
     });
 });
-  
-       
-</script>        
-                           
+
+
+</script>
+
                  {% endblock %}
-                 
+
 
 

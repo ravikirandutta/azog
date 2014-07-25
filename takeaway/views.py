@@ -118,7 +118,7 @@ def coursedetail(request,course_id=1):
 def personal_course_detail(request,course_id=1):
     course_obj = Course.objects.get(pk=course_id)
     course_sessions_list = Session.objects.filter(course=course_obj)
-    sessions_notes_list = TakeAway.objects.filter(course=course_obj,user=request.user).order_by('session')
+    sessions_notes_list = TakeAway.objects.filter(course=course_obj,user=request.user).order_by('-vote_count')
     sessions_map = {}
 
     for session in course_sessions_list:
@@ -133,7 +133,7 @@ def personal_course_detail(request,course_id=1):
 def public_course_detail(request,course_id=1):
     course_obj = Course.objects.get(pk=course_id)
     course_sessions_list = Session.objects.filter(course=course_obj)
-    sessions_notes_list = TakeAway.objects.filter(course=course_obj,is_public=True).order_by('session')
+    sessions_notes_list = TakeAway.objects.filter(course=course_obj,is_public=True).order_by('-vote_count')
 
 
 

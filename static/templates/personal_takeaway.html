@@ -52,7 +52,7 @@
                                             <div class="panel-body">
                                    {%for notes in session_notes %}
 
-                                    <p  style="border: 1px solid #ddd;" align="center"> {{ notes.notes }}
+                                    <p  style="border: 1px solid #ddd;padding-left:10px;padding-top:5px" align="left"> {{ notes.notes }}
                                     - by {{ notes.user }} <span id="votecount{{ notes.id}}" class="badge">{{notes.vote_count}}</span>
                                     <!--{% if user == notes.user %}-->
                                     <button class="btn-group btn-success" id="make_public{{ notes.id}}" onclick="make_public1({{ notes.id}},'make_public{{ notes.id}}')" >
