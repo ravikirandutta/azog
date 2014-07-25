@@ -12,7 +12,7 @@
                       <h3   align="center" ><a href="{% url 'session_detail' session.id %}">{{ session.session_name }}</a></h3>
                       </div>
                       <div class="col-md-2 col-sm-offset-1">
-                      <h3><a href="{% url 'public_course_detail' session.id %}"> Classmate's Notes</a> </h3>
+                      <h3><a href="{% url 'public_course_detail' course.id %}"> Classmate's Notes</a> </h3>
                       </div>
                       <div class="col-md-2 col-sm-offset-1">
                       <h3><a href="{% url 'personal_course_detail' course.id %}"> Personal Notes</a> </h3>
