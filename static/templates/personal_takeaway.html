@@ -53,7 +53,7 @@
                                    {%for notes in session_notes %}
 
                                     <p  style="border: 1px solid #ddd;padding-left:10px;padding-top:5px" align="left"> {{ notes.notes|linebreaks }}
-                                    - by {{ notes.user }} <span id="votecount{{ notes.id}}" class="badge">{{notes.vote_count}}</span>
+                                    - by {{ notes.user }} <span id="votecount{{ notes.id}}" class="badge" style="float:right;margin:5px">{{notes.vote_count}}</span>
                                     <!--{% if user == notes.user %}-->
                                     <button class="btn-group btn-success" id="make_public{{ notes.id}}" onclick="make_public1({{ notes.id}},'make_public{{ notes.id}}')" >
                                         {% if notes.is_public %} Make Private   {% else  %} Make Public {%  endif  %}</button>
@@ -62,7 +62,7 @@
                                     <!--{%  endif  %}-->
                                     {% if user != notes.user %}
                                     <button id="thumbsup{{ notes.id}}" name="foo" value="bar" onclick="vote({{ notes.id}},'thumbsup{{ notes.id}}',1)" style="float:right">
-                                        <img src="{% static "takeaway/media/64.png" %}" alt="submit"
+                                        <img src="{% static "takeaway/media/32.png" %}" alt="submit"
                                              height="30" width="30"  />
                                     </button>
                                     {%  endif  %}
