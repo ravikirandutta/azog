@@ -62,8 +62,9 @@
                                     <!--{%  endif  %}-->
                                     {% if user != notes.user %}
                                     <button id="thumbsup{{ notes.id}}" name="foo" value="bar" onclick="vote({{ notes.id}},'thumbsup{{ notes.id}}',1)" style="float:right">
-                                        <img src="{% static "takeaway/media/32.png" %}" alt="submit"
-                                             height="30" width="30"  />
+                                        <span class="glyphicon glyphicon-thumbs-up"></span>
+                                        <!--<img src="{% static "takeaway/media/32.png" %}" alt="submit"
+                                             height="30" width="30"  /> -->
                                     </button>
                                     {%  endif  %}
                                     <!--{% if user = notes.user %}-->
