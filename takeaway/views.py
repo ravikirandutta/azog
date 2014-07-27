@@ -116,9 +116,14 @@ def coursedetail(request,course_id=1):
 
 @login_required
 def personal_course_detail(request,course_id=1):
+    tag = request.GET.get('tag')
     course_obj = Course.objects.get(pk=course_id)
     course_sessions_list = Session.objects.filter(course=course_obj)
-    sessions_notes_list = TakeAway.objects.filter(course=course_obj,user=request.user).order_by('-vote_count')
+    if tag is None:
+        sessions_notes_list = TakeAway.objects.filter(course=course_obj,is_public=True).order_by('-vote_count')
+    else:
+        sessions_notes_list = TakeAway.objects.filter(course=course_obj,is_public=True, tags__name__startswith=tag).order_by('-vote_count')
+
     sessions_map = {}
 
     for session in course_sessions_list:
