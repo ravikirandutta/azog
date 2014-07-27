@@ -32,7 +32,15 @@
                               </form>
                         </div>
 
-                         <!--<div class="row marketing" >-->
+                         <!--<div class="row marketing" >
+
+                                    <button id="thumbsup{{ notes.id}}" name="foo" value="bar" onclick="vote({{ notes.id}},'thumbsup{{ notes.id}}',1)" >
+                                        <img src="{% static "takeaway/media/32.png" %}" alt="submit"
+                                             height="30" width="30" />
+                                    <span class="glyphicon glyphicon-thumbs-up"></span>
+                                    </button>
+                                  -->
+
 
 
                                <ul class="list-group">
@@ -48,20 +56,20 @@
                                        - by {{ notes.user }} <span id="votecount{{ notes.id}}" class="badge">{{notes.vote_count}}</span>
                                     {% if user = notes.user %}
                                     <button class="btn-group btn-success" id="make_public{{ notes.id}}" onclick="make_public1({{ notes.id}},'make_public{{ notes.id}}')" >
-                                        {% if notes.is_public %} Make Private   {% else  %} Make Public {%  endif  %}</button>
-
-
+                                        {% if notes.is_public %} Make Private   {% else  %} Make Public {%  endif  %}</button
                                     {%  endif  %}
-                                    <button id="thumbsup{{ notes.id}}" name="foo" value="bar" onclick="vote({{ notes.id}},'thumbsup{{ notes.id}}',1)" >
-                                       <!-- <img src="{% static "takeaway/media/32.png" %}" alt="submit"
-                                             height="30" width="30" /> -->
-                                    <span class="glyphicon glyphicon-thumbs-up"></span>
-                                    </button>
+
+
                                     {% if user = notes.user %}
                                     <button id="delete{{ notes.id}}" name="foo" value="bar" onclick="deleteNotes({{ notes.id}})">
                                         <img src="{% static "takeaway/media/delete.jpg" %}" alt="submit"
                                              height="30" width="30"/>
                                     </button>
+
+                                      {% for tag in notes.tags.all%}
+
+                                      {%endfor%}
+                                     <input type="text" id="{{notes.id}}" value='{% for item in  notes.tags.all %}{{item.name}},{% endfor %}' data-role="tagsinput" placeholder="Please use either short-term or long-term" />
                                     {%  endif  %}
                                    <!-- </p> -->
 

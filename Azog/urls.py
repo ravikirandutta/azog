@@ -29,6 +29,8 @@ urlpatterns = patterns('',
     url(r'^takeaway/notes/makepublic/$', 'takeaway.views.make_public', name='make_public'),
     url(r'^takeaway/notes/vote/$', 'takeaway.views.vote', name='vote'),
 
+    url(r'^takeaway/notes/tags/$', 'takeaway.views.tags', name='tags'),
+
     url(r'^takeaway/notes/edit/$', 'takeaway.views.notes_edit', name='notes_edit'),
     url(r'^takeaway/notes/delete/$', 'takeaway.views.notes_delete', name='notes_delete'),
 

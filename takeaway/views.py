@@ -4,7 +4,7 @@ from django.views.decorators.csrf import requires_csrf_token
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from takeaway.models import Course,Session,TakeAway,School,Enrollment,Vote
+from takeaway.models import Course,Session,TakeAway,School,Enrollment,Vote, Tag
 from notifications import notify
 
 
@@ -131,10 +131,13 @@ def personal_course_detail(request,course_id=1):
     return render_to_response("personal_takeaway.html",{'course':course_obj,'course_sessions_list':course_sessions_list,'sessions_notes_list':sessions_notes_list,'sessions_map':sessions_map},RequestContext(request))
 @login_required
 def public_course_detail(request,course_id=1):
+    tag = request.GET.get('tag')
     course_obj = Course.objects.get(pk=course_id)
     course_sessions_list = Session.objects.filter(course=course_obj)
-    sessions_notes_list = TakeAway.objects.filter(course=course_obj,is_public=True).order_by('-vote_count')
-
+    if tag is None:
+        sessions_notes_list = TakeAway.objects.filter(course=course_obj,is_public=True).order_by('-vote_count')
+    else:
+        sessions_notes_list = TakeAway.objects.filter(course=course_obj,is_public=True, tags__name__startswith=tag).order_by('-vote_count')
 
 
     sessions_map = {}
@@ -212,6 +215,29 @@ def make_public(request):
     # notify.send(request.user, recipient=recipient, verb=u'posted', action_object=takeaway,
         #    description= "takeaway", target= session_obj)
     return HttpResponse( str(takeaway.is_public))
+
+
+@requires_csrf_token
+def tags(request):
+    user = request.user
+    takeaway_id = request.POST.get('takeaway_id')
+    tag_value = request.POST.get('tag_value')
+    operation = request.POST.get('operation')
+    takeaway = TakeAway.objects.get(pk=takeaway_id)
+    try:
+        tag = Tag.objects.get(name=tag_value)
+    except Tag.DoesNotExist:
+        tag = None
+    if tag is None:
+        tag = Tag(name=tag_value)
+        tag.save()
+
+    if operation=='add':
+        takeaway.tags.add(tag)
+    else:
+        takeaway.tags.remove(tag)
+    takeaway.save()
+    return HttpResponse(str(True))
 
 @requires_csrf_token
 def vote(request):

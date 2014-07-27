@@ -32,6 +32,10 @@
                              <div class="accordion-expand-holder">
                                 <button id="expand" type="button" class="open">Expand all</button>
                                 <button id="collapse" type="button" class="collapse1">Collapse all</button>
+                                <span> filter takeaways by
+                                <a style="margin:10px" href="{% url 'public_course_detail' course.id %}?tag=short-term"> short-term </a>
+                                <a href="{% url 'public_course_detail' course.id %}?tag=long-term"> long-term </a>
+                              </span>
                                </div>
 
                              <div class="panel-group" id="accordion">
@@ -47,13 +51,27 @@
                                         <a class="ui-accordion-header ui-state-default ui-accordion-icons ui-accordion-header-active ui-state-active ui-corner-top" data-toggle="collapse" data-parent="#accordion" href="#session{{session.id}}"> {{session}}</a>
                                       </h4>
                                       </div>
-                                          <div id="session{{session.id}}" class="panel-collapse collapse">
+                                          <div id="session{{session.id}}" class="panel-collapse collapse in">
                                    <!--<div class="col-md-8 col-md-offset-1">-->
                                             <div class="panel-body">
                                    {%for notes in session_notes %}
 
                                     <p  style="border: 1px solid #ddd;padding-left:10px;padding-top:5px" align="left"> {{ notes.notes|linebreaks }}
-                                    - by {{ notes.user }} <span id="votecount{{ notes.id}}" class="badge" style="float:right;margin:5px">{{notes.vote_count}}</span>
+                                    - by {{ notes.user }}
+                                      {%if notes.tags.all.count > 0%}
+                                        <br/>
+                                       {%endif%}
+                                       <span >
+                                       {%for tag in notes.tags.all%}
+                                       <span class="glyphicon glyphicon-tag"  >
+
+                                         </span>
+                                         {{tag.name}}
+                                      {%endfor%}
+                                       </span>
+
+
+                                    <span id="votecount{{ notes.id}}" class="badge" style="float:right;margin:5px">{{notes.vote_count}}</span>
                                     <!--{% if user == notes.user %}-->
                                     <button class="btn-group btn-success" id="make_public{{ notes.id}}" onclick="make_public1({{ notes.id}},'make_public{{ notes.id}}')" >
                                         {% if notes.is_public %} Make Private   {% else  %} Make Public {%  endif  %}</button>
